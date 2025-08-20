@@ -26,16 +26,27 @@ public class ReservaService {
         return repository.save(r);
     }
 
-    //ATUALIZAR RESERVA
+    //ATUALIZAR RESERVA --> VERIFICA SE A NOVA DATA ESTÁ DISPONIVEL ANTES DE ATUALIZAR
     public Reserva atualizar(Long id, Reserva dados){
         Reserva atual = buscarPorId(id);
-        if(repository.existsByDataReservaAndIdNot(dados.getDataReserva(), id)){
-            throw new RegraNegocioException("Nova data indisponível");
+        if(dados.getDataReserva() != null && repository.existsByDataReservaAndIdNot(dados.getDataReserva(), id)){
+                throw new RegraNegocioException("Nova data indisponível");
         }
-        atual.setNomeCliente(dados.getNomeCliente());
-        atual.setDataReserva(dados.getDataReserva());
-        atual.setValorCobrado(dados.getValorCobrado());
-        atual.setObservacoes(dados.getObservacoes());
+        if(dados.getNomeCliente() != null){
+            atual.setNomeCliente(dados.getNomeCliente());
+        }
+
+        if(dados.getDataReserva() != null){
+            atual.setDataReserva(dados.getDataReserva());
+        }
+
+        if(dados.getValorCobrado() != null){
+            atual.setValorCobrado(dados.getValorCobrado());
+        }
+
+        if(dados.getObservacoes() != null){
+            atual.setObservacoes(dados.getObservacoes());
+        }
         return repository.save(atual);
     }
 
